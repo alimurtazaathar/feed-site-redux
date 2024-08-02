@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import { useDispatch,useSelector } from 'react-redux'
-import { postUpdated } from './postSlice'
+import { postUpdated,selectPostById } from './postSlice'
 import { useParams,useNavigate } from 'react-router-dom'
 const EditPost = () => {
     const [title,setTitle]=useState("")
@@ -8,7 +8,7 @@ const EditPost = () => {
     const params=useParams()
     const navigate=useNavigate()
     const {postId}=params;
-    const post=useSelector(state=>state.post.find(item=>item.id===postId))
+    const post=useSelector(state=>selectPostById(state,postId))
     const dispatch=useDispatch()    
     const setTitleOnChange=(e)=>setTitle(e.target.value)
     const setTextOnChange=(e)=>setText(e.target.value)

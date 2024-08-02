@@ -1,15 +1,22 @@
 import {createSlice} from '@reduxjs/toolkit'
 import  {nanoid} from "@reduxjs/toolkit"
-import { act } from 'react'
+import {sub} from "date-fns"
+
 const initialState=[{
     id:nanoid(),
     title:"First Post",
-    text:"hello there im the first"
+    text:"hello there im the first",
+    userId:0,
+    date:sub(new Date(),{minutes:10}).toISOString(),
+    reactions:{thumbsUp: 0, tada: 0, heart: 0, rocket: 0, eyes: 0}
 },
 {
     id:nanoid(),
     title:"Second Post",
-    text:"hello there im the second"
+    text:"hello there im the second",
+    userId:1,
+    date:sub(new Date(),{minutes:5}).toISOString(),
+    reactions:{thumbsUp: 0, tada: 0, heart: 0, rocket: 0, eyes: 0}
 }]
 
 const postSlice=createSlice({
@@ -20,10 +27,17 @@ const postSlice=createSlice({
             reducer(state,action){
                 state.push(action.payload)
             },
-            prepare(title,text)
+            prepare(title,text,userId)
             {
                 return{
-                    payload:{id:nanoid(),title,text}
+                    payload:{
+                        id:nanoid(),
+                        date:new Date().toISOString(),
+                        title,
+                        text,
+                        userId,
+                        reactions:{thumbsUp: 0, tada: 0, heart: 0, rocket: 0, eyes: 0}
+                    }
                 };
             }
 
@@ -41,12 +55,21 @@ const postSlice=createSlice({
                 postToEdit.text=text;
             }
         },
+        reactionAdded(state,action)
+        {
+            const {id,reaction}=action.payload;
+            const postToEdit=state.find(post=>post.id===id)
+            if(postToEdit)
+            {
+                postToEdit.reactions[reaction]++;
+            }
+        }
 
     }
 
 })
 
-export const {postAdded,postUpdated}=postSlice.actions;
+export const {postAdded,postUpdated,reactionAdded}=postSlice.actions;
 export const selectAllPost=state=>state.post
 export const selectPostById=(state,postId)=>state.post.find((item)=>item.id===postId)
 export default postSlice.reducer
