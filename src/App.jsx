@@ -6,12 +6,14 @@ import { BrowserRouter, Routes,Route } from "react-router-dom";
 import SinglePostPage from "./features/posts/SinglePostPage";
 import Navbar from "./components/Navbar"
 import EditPost from "./features/posts/EditPost";
+import LoginPage from "./features/auth/LoginPage";
 const App = () => (
   <BrowserRouter>
     <Navbar />
     <Routes>
+      <Route path="/" element={<LoginPage/>}/>
       <Route 
-        path="/" 
+        path="/posts" 
         element={
           <React.Fragment>
             <AddPost />
